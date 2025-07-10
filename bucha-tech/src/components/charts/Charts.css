@@ -1,0 +1,249 @@
+/* Placeholder for Charts styles */
+
+/* =============================================================================
+   COMPOSANT CHARTS - Styles modernes pour les graphiques
+   ============================================================================= */
+
+.charts-section {
+  width: 100%;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.charts-header {
+  margin-bottom: 3rem;
+  text-align: center;
+  position: relative;
+}
+
+.charts-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-accent-light), var(--color-accent));
+  border-radius: 2px;
+}
+
+.charts-title {
+  font-size: 2rem;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.charts-subtitle {
+  color: var(--color-text-light);
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 2rem;
+  perspective: 1000px;
+}
+
+.chart-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-5px) rotateX(2deg);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card:hover::before {
+  transform: translateX(100%);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.chart-title {
+  color: var(--color-text);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.chart-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(to bottom, var(--color-accent-light), var(--color-accent));
+  border-radius: 2px;
+}
+
+.chart-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.chart-icon:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.chart-icon:hover::after {
+  opacity: 1;
+}
+
+.chart-icon-primary {
+  background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+  color: white;
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.2);
+}
+
+.chart-icon-secondary {
+  background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+  color: white;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.2);
+}
+
+.chart-icon-accent {
+  background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);
+  color: white;
+  box-shadow: 0 4px 16px rgba(8, 145, 178, 0.2);
+}
+
+.chart-icon-danger {
+  background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+  color: white;
+  box-shadow: 0 4px 16px rgba(225, 29, 72, 0.2);
+}
+
+.chart-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease;
+}
+
+.chart-container:hover {
+  transform: scale(1.02);
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .charts-title {
+    font-size: 1.5rem;
+  }
+  
+  .chart-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .chart-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Ajout d'animations pour les éléments stagger */
+.stagger-item {
+  opacity: 0;
+  animation: fadeInStagger 0.5s ease-out forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.1s; }
+.stagger-item:nth-child(2) { animation-delay: 0.2s; }
+.stagger-item:nth-child(3) { animation-delay: 0.3s; }
+.stagger-item:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInStagger {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

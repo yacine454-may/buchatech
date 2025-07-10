@@ -1,0 +1,52 @@
+/* Medecins page styles */
+
+/* =============================================================================
+   PAGE MÉDECINS - Styles pour la gestion de l'équipe médicale
+   ============================================================================= */
+
+.medecins-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.medecins-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+.medecins-grid {
+  gap: 1.5rem;
+}
+
+.medecin-specialite {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.medecin-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.contact-item svg {
+  color: var(--primary-400);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .medecins-grid {
+    grid-template-columns: 1fr;
+  }
+}
