@@ -218,15 +218,90 @@ const patientSchema = new mongoose.Schema({
     }
   },
 
+  // === ANESTHÉSIE ===
+  anesthesie: {
+    ag: {
+      type: Boolean,
+      default: false
+    },
+    alr: {
+      al: { type: Boolean, default: false },
+      ra: { type: Boolean, default: false },
+      peridural: { type: Boolean, default: false },
+      perirachicombine: { type: Boolean, default: false },
+      blocPeripherique: { type: Boolean, default: false }
+    },
+    asa: {
+      type: String,
+      enum: ['ASA I', 'ASA II', 'ASA III', 'ASA IV', 'ASA V'],
+      default: ''
+    }
+  },
+
+  // === DOCUMENTS UPLOAD ===
+  documents: [
+    {
+      filename: String,
+      originalname: String,
+      mimetype: String,
+      size: Number,
+      url: String
+    }
+  ],
+
   // === NOTES ET ORDONNANCES ===
   notes: {
     type: String,
     trim: true
   },
-  ordonnances: [{
+  ordonnances: [{ type: String }],
+
+  // === ÉVOLUTION ===
+  evolution: {
+    cicatrisation: {
+      delai: Number,
+      unite: { type: String, enum: ['jour', 'mois'], default: 'jour' }
+    },
+    protheseDate: Date,
+    crp: {
+      initial: Number,
+      unMois: Number,
+      deuxMois: Number
+    },
+    hemoglobineGlyquee: {
+      avant: Number,
+      unMois: Number,
+      troisMois: Number
+    },
+    troponine: {
+      avantOperation: Number,
+      apresOperation: Number
+    },
+    cycle: String,
+    autre: String
+  },
+
+  // === STATUT PATIENT ===
+  statut: {
     type: String,
-    trim: true
-  }]
+    enum: ['nouveau', 'sous_trt', 'apres_trt', 'decede'],
+    default: 'nouveau'
+  },
+
+  // === HISTORIQUE DES STATUTS ===
+  statutHistory: [
+    {
+      statut: {
+        type: String,
+        enum: ['nouveau', 'sous_trt', 'apres_trt', 'decede'],
+        required: true
+      },
+      date: {
+        type: Date,
+        required: true
+      }
+    }
+  ],
 }, {
   timestamps: true // Adds createdAt and updatedAt fields
 });
@@ -255,5 +330,4 @@ patientSchema.set('toJSON', { virtuals: true });
 patientSchema.set('toObject', { virtuals: true });
 
 const Patient = mongoose.model('Patient', patientSchema);
-
 export default Patient;

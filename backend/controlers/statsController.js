@@ -1,4 +1,4 @@
-import Patient from '../models/Patient.js';
+import Patient from '../models/patient.js';
 import Medecin from '../models/Medecin.js';
 import RendezVous from '../models/RendezVous.js';
 import Consultation from '../models/Consultation.js';

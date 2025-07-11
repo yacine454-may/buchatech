@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Patient from '../models/Patient.js';
+import Patient from '../models/patient.js';
 import Medecin from '../models/Medecin.js';
 import RendezVous from '../models/RendezVous.js';
 import Consultation from '../models/Consultation.js';
@@ -777,7 +777,7 @@ if (process.argv[2] === 'rdv') {
 
 async function checkStats() {
   await mongoose.connect('mongodb://localhost:27017/buchatech', { useNewUrlParser: true, useUnifiedTopology: true });
-  const Patient = (await import('../models/Patient.js')).default;
+  const Patient = (await import('../models/patient.js')).default;
   const Medecin = (await import('../models/Medecin.js')).default;
   const RendezVous = (await import('../models/RendezVous.js')).default;
 
