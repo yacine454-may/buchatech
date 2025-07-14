@@ -4,7 +4,7 @@ import Medecin from '../models/Medecin.js';
 export const getAllMedecins = async (req, res) => {
   try {
     const medecins = await Medecin.find().sort({ createdAt: -1 });
-    res.json(medecins);
+  res.json(medecins);
   } catch (error) {
     console.error('Error fetching medecins:', error);
     res.status(500).json({ message: 'Erreur lors de la récupération des médecins', error: error.message });

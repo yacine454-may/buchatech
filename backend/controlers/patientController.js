@@ -23,7 +23,7 @@ const upload = multer({ storage });
 export const getAllPatients = async (req, res) => {
   try {
     const patients = await Patient.find().sort({ createdAt: -1 });
-    res.json(patients);
+  res.json(patients);
   } catch (error) {
     console.error('Error fetching patients:', error);
     res.status(500).json({ message: 'Erreur lors de la récupération des patients', error: error.message });
@@ -53,7 +53,7 @@ export const createPatient = async (req, res) => {
   } catch (error) {
     console.error('Error creating patient:', error);
     if (error.name === 'ValidationError') {
-      return res.status(400).json({ 
+    return res.status(400).json({ 
         message: 'Données invalides', 
         errors: Object.values(error.errors).map(err => err.message) 
       });

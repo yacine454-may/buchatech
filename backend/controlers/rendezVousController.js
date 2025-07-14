@@ -154,7 +154,7 @@ export const getRendezVousByMedecin = async (req, res) => {
       .populate('medecinId', 'nom prenom specialite')
       .sort({ date: 1, heure: 1 });
     
-    res.json(rendezVous);
+  res.json(rendezVous);
   } catch (error) {
     console.error('Error fetching rendez-vous by medecin:', error);
     res.status(500).json({ message: 'Erreur lors de la récupération des rendez-vous', error: error.message });
