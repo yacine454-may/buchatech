@@ -1,0 +1,79 @@
+/* Card component styles */
+
+/* =============================================================================
+   COMPOSANTS CARTES - Styles pour les éléments de contenu
+   ============================================================================= */
+
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.card-body {
+  margin-bottom: 1rem;
+}
+
+.card-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-light);
+}
+
+/* Variants de cartes */
+.card-primary {
+  border-color: var(--primary-200);
+  background: var(--primary-50);
+}
+
+.card-success {
+  border-color: var(--success-200);
+  background: var(--success-50);
+}
+
+.card-warning {
+  border-color: var(--secondary-200);
+  background: var(--secondary-50);
+}
+
+.card-danger {
+  border-color: var(--danger-200);
+  background: var(--danger-50);
+}
+
+/* Carte compacte */
+.card-compact {
+  padding: 1rem;
+}
+
+/* Carte sans bordure */
+.card-borderless {
+  border: none;
+  box-shadow: var(--shadow-xs);
+}

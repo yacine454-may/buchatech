@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuchaTech Database Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .refresh-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .refresh-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 BuchaTech Database Viewer</h1>
+        
+        <button class="refresh-btn" onclick="loadAllData()">🔄 Refresh Data</button>
+        
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalPatients">-</div>
+                <div>Patients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalDoctors">-</div>
+                <div>Doctors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalAppointments">-</div>
+                <div>Appointments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalConsultations">-</div>
+                <div>Consultations</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👥 Patients</h2>
+            <div id="patientsTable"></div>
+        </div>
+
+        <div class="section">
+            <h2>👨‍⚕️ Doctors</h2>
+            <div id="doctorsTable"></div>
+        </div>
+
+        <div class="section">
+            <h2>📅 Appointments</h2>
+            <div id="appointmentsTable"></div>
+        </div>
+
+        <div class="section">
+            <h2>🏥 Consultations</h2>
+            <div id="consultationsTable"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        async function loadAllData() {
+            try {
+                const [patients, doctors, appointments, consultations, stats] = await Promise.all([
+                    fetch(`${API_BASE}/patients`).then(r => r.json()),
+                    fetch(`${API_BASE}/medecins`).then(r => r.json()),
+                    fetch(`${API_BASE}/rendez-vous`).then(r => r.json()),
+                    fetch(`${API_BASE}/consultations`).then(r => r.json()),
+                    fetch(`${API_BASE}/stats/dashboard`).then(r => r.json())
+                ]);
+
+                // Update stats
+                document.getElementById('totalPatients').textContent = stats.overview.totalPatients;
+                document.getElementById('totalDoctors').textContent = stats.overview.totalMedecins;
+                document.getElementById('totalAppointments').textContent = stats.overview.totalRendezVous;
+                document.getElementById('totalConsultations').textContent = stats.overview.totalConsultations;
+
+                // Create tables
+                createTable('patientsTable', patients, [
+                    { key: 'nomComplet', label: 'Name' },
+                    { key: 'age', label: 'Age' },
+                    { key: 'sexe', label: 'Gender' },
+                    { key: 'diabete', label: 'Diabetes Type' },
+                    { key: 'telephone', label: 'Phone' },
+                    { key: 'email', label: 'Email' }
+                ]);
+
+                createTable('doctorsTable', doctors, [
+                    { key: 'nomComplet', label: 'Name' },
+                    { key: 'specialite', label: 'Specialty' },
+                    { key: 'status', label: 'Status' },
+                    { key: 'telephone', label: 'Phone' },
+                    { key: 'email', label: 'Email' }
+                ]);
+
+                createTable('appointmentsTable', appointments, [
+                    { key: 'patient', label: 'Patient' },
+                    { key: 'medecin', label: 'Doctor' },
+                    { key: 'dateFormatted', label: 'Date' },
+                    { key: 'heure', label: 'Time' },
+                    { key: 'type', label: 'Type' },
+                    { key: 'statut', label: 'Status' }
+                ]);
+
+                createTable('consultationsTable', consultations, [
+                    { key: 'patientId.nomComplet', label: 'Patient' },
+                    { key: 'medecinId.nomComplet', label: 'Doctor' },
+                    { key: 'dateFormatted', label: 'Date' },
+                    { key: 'type', label: 'Type' },
+                    { key: 'diagnostic', label: 'Diagnosis' },
+                    { key: 'montant', label: 'Amount' },
+                    { key: 'paiement', label: 'Payment' }
+                ]);
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data. Make sure the backend server is running on port 5000.');
+            }
+        }
+
+        function createTable(containerId, data, columns) {
+            const container = document.getElementById(containerId);
+            
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p>No data available</p>';
+                return;
+            }
+
+            let table = '<table><thead><tr>';
+            columns.forEach(col => {
+                table += `<th>${col.label}</th>`;
+            });
+            table += '</tr></thead><tbody>';
+
+            data.forEach(item => {
+                table += '<tr>';
+                columns.forEach(col => {
+                    const value = getNestedValue(item, col.key);
+                    table += `<td>${value || '-'}</td>`;
+                });
+                table += '</tr>';
+            });
+
+            table += '</tbody></table>';
+            container.innerHTML = table;
+        }
+
+        function getNestedValue(obj, path) {
+            return path.split('.').reduce((current, key) => {
+                return current && current[key] !== undefined ? current[key] : null;
+            }, obj);
+        }
+
+        // Load data on page load
+        window.onload = loadAllData;
+    </script>
+</body>
+</html> 

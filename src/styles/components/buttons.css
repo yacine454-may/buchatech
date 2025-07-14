@@ -1,0 +1,126 @@
+/* Button component styles */
+
+/* =============================================================================
+   COMPOSANTS BOUTONS - Styles pour les interactions utilisateur
+   ============================================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-out);
+  min-height: 40px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Variants principaux */
+.btn-primary {
+  background: var(--primary-500);
+  color: var(--text-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-600);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-secondary {
+  background: var(--neutral-100);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--neutral-200);
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: var(--success-500);
+  color: var(--text-white);
+}
+
+.btn-success:hover:not(:disabled) {
+  background: var(--success-600);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-success);
+}
+
+.btn-danger {
+  background: var(--danger-500);
+  color: var(--text-white);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--danger-600);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-danger);
+}
+
+.btn-warning {
+  background: var(--secondary-400);
+  color: var(--neutral-800);
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: var(--secondary-500);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-warning);
+}
+
+/* Tailles */
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  min-height: 32px;
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  min-height: 48px;
+}
+
+/* Styles spéciaux */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--neutral-100);
+  color: var(--text-primary);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--primary-500);
+  color: var(--primary-500);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--primary-500);
+  color: var(--text-white);
+}
+
+.btn-icon {
+  padding: 0.75rem;
+  min-width: 40px;
+  border-radius: 8px;
+}
