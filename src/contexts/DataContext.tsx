@@ -147,7 +147,8 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || '';
+  const API_URL = (import.meta as any).env.VITE_API_URL || '';
+  console.log('DATA API_URL:', API_URL);
 
   const fetchData = async () => {
     try {
