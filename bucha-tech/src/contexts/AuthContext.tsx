@@ -65,9 +65,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
+  // Ajout du log pour debug Vercel
+  const API_URL = (import.meta as any).env.VITE_API_URL || '';
+  console.log('AUTH API_URL:', API_URL);
+
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
