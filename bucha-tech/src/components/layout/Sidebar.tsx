@@ -79,8 +79,23 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
     }
   }, [user, activeSection, canAccessSection, onSectionChange]);
 
+  // Ajout : bouton hamburger pour mobile
+  const HamburgerButton = () => (
+    <button
+      className="sidebar-toggle sidebar-hamburger"
+      style={{ position: 'fixed', top: 16, left: 16, zIndex: 200, display: isMobileView ? 'block' : 'none' }}
+      onClick={toggleSidebar}
+      aria-label="Ouvrir le menu"
+    >
+      <Menu size={28} />
+    </button>
+  );
+
   return (
     <>
+      {/* Bouton hamburger mobile */}
+      <HamburgerButton />
+      {/* Overlay mobile */}
       {isMobileView && (
         <div
           className={`sidebar-overlay ${isMobileOpen ? 'visible' : ''}`}
@@ -92,6 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
         initial="hidden"
         animate="visible"
         className={`sidebar ${isCollapsed ? 'collapsed' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}
+        style={isMobileView ? { zIndex: 201 } : {}}
       >
         <div className="sidebar-header">
           <div className="sidebar-logo flex items-center gap-2">
@@ -125,7 +141,10 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
               >
                 <button
                   className={`nav-item ${activeSection === item.id ? 'active' : ''} ${isCollapsed ? 'collapsed-nav-item' : ''}`}
-                  onClick={() => onSectionChange(item.id)}
+                  onClick={() => {
+                    onSectionChange(item.id);
+                    if (isMobileView) setIsMobileOpen(false); // Ferme la sidebar sur mobile
+                  }}
                   aria-label={item.label}
                 >
                   {React.cloneElement(item.icon, {
