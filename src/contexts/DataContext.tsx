@@ -156,6 +156,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
       setError(null);
 
       // Fetch all data in parallel
+      console.log('FETCH DASHBOARD URL:', `${API_URL}/stats/dashboard`);
       const [patientsRes, medecinsRes, rendezVousRes, consultationsRes, dashboardRes] = await Promise.all([
         axios.get<Patient[]>(`${API_URL}/patients`),
         axios.get<Medecin[]>(`${API_URL}/medecins`),
@@ -211,7 +212,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
             week: string;
             enService: number;
           }>;
-        }>('/api/stats/dashboard')
+        }>(`${API_URL}/stats/dashboard`)
       ]);
 
       setPatients(patientsRes.data);
