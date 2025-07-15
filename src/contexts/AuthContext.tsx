@@ -65,7 +65,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
+  // Ajout du log pour debug Vercel
   const API_URL = (import.meta as any).env.VITE_API_URL || '';
+  console.log('AUTH API_URL:', API_URL);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
