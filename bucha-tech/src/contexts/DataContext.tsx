@@ -147,6 +147,9 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const API_URL = (import.meta as any).env.VITE_API_URL || '';
+  console.log('DATA API_URL:', API_URL);
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -154,10 +157,10 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
       // Fetch all data in parallel
       const [patientsRes, medecinsRes, rendezVousRes, consultationsRes, dashboardRes] = await Promise.all([
-        axios.get<Patient[]>('/api/patients'),
-        axios.get<Medecin[]>('/api/medecins'),
-        axios.get<RendezVous[]>('/api/rendez-vous'),
-        axios.get<Consultation[]>('/api/consultations'),
+        axios.get<Patient[]>(`${API_URL}/patients`),
+        axios.get<Medecin[]>(`${API_URL}/medecins`),
+        axios.get<RendezVous[]>(`${API_URL}/rendez-vous`),
+        axios.get<Consultation[]>(`${API_URL}/consultations`),
         axios.get<{
           overview: {
             totalPatients: number;
@@ -287,7 +290,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   // Patient operations
   const addPatient = async (patient: Omit<Patient, 'id'>) => {
     try {
-      const response = await axios.post<Patient>('/api/patients', patient);
+      const response = await axios.post<Patient>(`${API_URL}/patients`, patient);
       setPatients(prev => [...prev, response.data]);
       await refreshData(); // Refresh dashboard stats
     } catch (err) {
@@ -298,7 +301,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
   const updatePatient = async (id: string, patient: Partial<Patient>) => {
     try {
-      const response = await axios.put<Patient>(`/api/patients/${id}`, patient);
+      const response = await axios.put<Patient>(`${API_URL}/patients/${id}`, patient);
       setPatients(prev => prev.map(p => p.id === id ? response.data : p));
       await refreshData(); // Refresh dashboard stats
     } catch (err) {
@@ -309,7 +312,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
   const deletePatient = async (id: string) => {
     try {
-      await axios.delete(`/api/patients/${id}`);
+      await axios.delete(`${API_URL}/patients/${id}`);
       setPatients(prev => prev.filter(p => p.id !== id));
       await refreshData(); // Refresh dashboard stats
     } catch (err) {
@@ -321,7 +324,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   // Medecin operations
   const addMedecin = async (medecin: Omit<Medecin, 'id'>) => {
     try {
-      const response = await axios.post<Medecin>('/api/medecins', medecin);
+      const response = await axios.post<Medecin>(`${API_URL}/medecins`, medecin);
       setMedecins(prev => [...prev, response.data]);
       await refreshData(); // Refresh dashboard stats
     } catch (err) {
@@ -332,7 +335,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
   const updateMedecin = async (id: string, medecin: Partial<Medecin>) => {
     try {
-      const response = await axios.put<Medecin>(`/api/medecins/${id}`, medecin);
+      const response = await axios.put<Medecin>(`${API_URL}/medecins/${id}`, medecin);
       setMedecins(prev => prev.map(m => m.id === id ? response.data : m));
       await refreshData(); // Refresh dashboard stats
     } catch (err) {
@@ -343,7 +346,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
   const deleteMedecin = async (id: string) => {
     try {
-      await axios.delete(`/api/medecins/${id}`);
+      await axios.delete(`${API_URL}/medecins/${id}`);
       setMedecins(prev => prev.filter(m => m.id !== id));
       await refreshData(); // Refresh dashboard stats
     } catch (err) {
@@ -355,7 +358,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   // RendezVous operations
   const addRendezVous = async (rendezVous: Omit<RendezVous, 'id'>) => {
     try {
-      const response = await axios.post<RendezVous>('/api/rendez-vous', rendezVous);
+      const response = await axios.post<RendezVous>(`${API_URL}/rendez-vous`, rendezVous);
       setRendezVous(prev => [...prev, response.data]);
       await refreshData(); // Refresh dashboard stats
     } catch (err) {
@@ -366,7 +369,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
   const updateRendezVous = async (id: string, rendezVous: Partial<RendezVous>) => {
     try {
-      const response = await axios.put<RendezVous>(`/api/rendez-vous/${id}`, rendezVous);
+      const response = await axios.put<RendezVous>(`${API_URL}/rendez-vous/${id}`, rendezVous);
       setRendezVous(prev => prev.map(r => r.id === id ? response.data : r));
       await refreshData(); // Refresh dashboard stats
     } catch (err) {
@@ -377,7 +380,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
   const deleteRendezVous = async (id: string) => {
     try {
-      await axios.delete(`/api/rendez-vous/${id}`);
+      await axios.delete(`${API_URL}/rendez-vous/${id}`);
       setRendezVous(prev => prev.filter(r => r.id !== id));
       await refreshData(); // Refresh dashboard stats
     } catch (err) {
