@@ -21,6 +21,9 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+// Ajouté tout en haut du fichier pour debug Vercel
+console.log('API_URL:', (import.meta as any).env.VITE_API_URL);
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider>
