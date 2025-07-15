@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// Ajout du log pour debug Vercel
+// Ajouté tout en haut du fichier pour debug Vercel
 console.log('API_URL:', (import.meta as any).env.VITE_API_URL);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
