@@ -117,6 +117,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
             )}
           </div>
         </div>
+        {/* Bouton de fermeture mobile */}
+        {isMobileView && (
+          <button
+            className="sidebar-close"
+            style={{ position: 'absolute', top: 16, right: 16, zIndex: 202 }}
+            onClick={closeMobileSidebar}
+            aria-label="Fermer le menu"
+          >
+            <span style={{ fontSize: 28, fontWeight: 'bold' }}>&times;</span>
+          </button>
+        )}
 
         <motion.div 
           className="flex h-full flex-col px-3 py-4"
