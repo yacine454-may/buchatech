@@ -156,6 +156,9 @@ interface Patient {
   statut?: 'nouveau' | 'sous_trt' | 'apres_trt' | 'decede';
 }
 
+// Ajouter en haut du fichier, après les imports
+const API_URL = import.meta.env.VITE_API_URL || '';
+
 const Patients: React.FC = () => {
   const { patients, addPatient, updatePatient, deletePatient, loading, error } = useData();
   const [searchTerm, setSearchTerm] = useState('');
@@ -452,7 +455,7 @@ const Patients: React.FC = () => {
         // Use the returned patient id (assume addPatient returns the new patient or refetch)
         const createdPatient = patients.find(p => p.nom === newPatient.nom && p.prenom === newPatient.prenom);
         if (createdPatient) {
-          await fetch(`/api/patients/${createdPatient.id}/upload`, {
+          await fetch(`${API_URL}/patients/${createdPatient.id}/upload`, {
         method: 'POST',
             body: formData
           });
@@ -1735,7 +1738,7 @@ const Patients: React.FC = () => {
                         for (const file of Array.from(input.files)) {
                           formData.append('files', file);
                         }
-                        const res = await fetch(`/api/patients/${selectedPatient.id}/upload`, {
+                        const res = await fetch(`${API_URL}/patients/${selectedPatient.id}/upload`, {
                           method: 'POST',
                           body: formData
                         });
