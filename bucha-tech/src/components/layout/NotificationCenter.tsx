@@ -3,6 +3,7 @@ import { Bell, Clock, User, Calendar, X, AlertCircle, Info, CheckCircle, AlertTr
 import { useToast } from '@/hooks/use-toast';
 import { useData } from '../../contexts/DataContext';
 import './NotificationCenter.css';
+import { useNavigate } from 'react-router-dom';
 
 interface Notification {
   id: string;
@@ -22,6 +23,7 @@ const NotificationCenter: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [lastCheck, setLastCheck] = useState(new Date());
+  const navigate = useNavigate();
 
   // Generate notifications based on database data
   const generateNotifications = useCallback(() => {
@@ -162,7 +164,7 @@ const NotificationCenter: React.FC = () => {
           // Show toast for high priority notifications
           uniqueNewNotifications.forEach(notif => {
             if (notif.priority === 'high') {
-              toast({
+      toast({
                 title: notif.title,
                 description: notif.message,
                 variant: notif.type === 'urgent' ? 'destructive' : 'default'
@@ -205,8 +207,7 @@ const NotificationCenter: React.FC = () => {
   const handleNotificationClick = (notification: Notification) => {
     markAsRead(notification.id);
     if (notification.actionUrl) {
-      // Navigate to the relevant page
-      window.location.href = notification.actionUrl;
+      navigate(notification.actionUrl); // Utilise la navigation React Router
     }
   };
 
@@ -259,14 +260,14 @@ const NotificationCenter: React.FC = () => {
               <span className="notification-time">
                 Dernière mise à jour: {lastCheck.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
               </span>
-              {unreadCount > 0 && (
-                <button 
-                  className="btn btn-sm btn-ghost"
-                  onClick={markAllAsRead}
-                >
-                  Tout marquer lu
-                </button>
-              )}
+            {unreadCount > 0 && (
+              <button 
+                className="btn btn-sm btn-ghost"
+                onClick={markAllAsRead}
+              >
+                Tout marquer lu
+              </button>
+            )}
             </div>
           </div>
           
