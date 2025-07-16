@@ -156,6 +156,9 @@ interface Patient {
   statut?: 'nouveau' | 'sous_trt' | 'apres_trt' | 'decede';
 }
 
+// Ajouter en haut du fichier, après les imports
+const API_URL = import.meta.env.VITE_API_URL || '';
+
 const Patients: React.FC = () => {
   const { patients, addPatient, updatePatient, deletePatient, loading, error } = useData();
   const [searchTerm, setSearchTerm] = useState('');
@@ -452,8 +455,8 @@ const Patients: React.FC = () => {
         // Use the returned patient id (assume addPatient returns the new patient or refetch)
         const createdPatient = patients.find(p => p.nom === newPatient.nom && p.prenom === newPatient.prenom);
         if (createdPatient) {
-          await fetch(`/api/patients/${createdPatient.id}/upload`, {
-            method: 'POST',
+          await fetch(`${API_URL}/patients/${createdPatient.id}/upload`, {
+        method: 'POST',
             body: formData
           });
         }
@@ -640,8 +643,8 @@ const Patients: React.FC = () => {
   }
 
   if (error) {
-    return (
-      <PageWrapper>
+  return (
+    <PageWrapper>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <p className="text-red-500 mb-4">Erreur: {error}</p>
@@ -673,15 +676,15 @@ const Patients: React.FC = () => {
         </div>
 
         {/* Barre de recherche */}
-        <div className="relative">
+            <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
-          <Input
+              <Input
             placeholder="Rechercher un patient..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 w-full"
-          />
-        </div>
+              />
+            </div>
 
         {/* Liste des patients */}
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -696,7 +699,7 @@ const Patients: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-primary/10 rounded-full">
                     <User className="h-5 w-5 text-primary" />
-                  </div>
+          </div> 
                   <div>
                     <h3 className="font-semibold">{patient.nom} {patient.prenom}</h3>
                     <p className="text-sm text-muted-foreground">{patient.age} ans • {patient.sexe}</p>
@@ -723,10 +726,10 @@ const Patients: React.FC = () => {
                     onClick={() => handleDelete(patient.id)}
                   >
                     <Trash size={14} />
-                  </Button>
+          </Button>
                 </div>
-              </div>
-              
+        </div>
+
               <div className="space-y-2">
                 {patient.email && (
                   <div className="flex items-center gap-2 text-sm">
@@ -789,41 +792,41 @@ const Patients: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="nom">Nom *</Label>
-                    <Input
-                      id="nom"
-                      name="nom"
-                      value={newPatient.nom}
-                      onChange={handleInputChange}
+                  <Input
+                    id="nom"
+                    name="nom"
+                    value={newPatient.nom}
+                    onChange={handleInputChange}
                       placeholder="Nom du patient"
-                      required
-                    />
-                  </div>
+                    required
+                  />
+                </div>
                   <div>
                     <Label htmlFor="prenom">Prénom *</Label>
-                    <Input
-                      id="prenom"
-                      name="prenom"
-                      value={newPatient.prenom}
-                      onChange={handleInputChange}
+                  <Input
+                    id="prenom"
+                    name="prenom"
+                    value={newPatient.prenom}
+                    onChange={handleInputChange}
                       placeholder="Prénom du patient"
-                      required
-                    />
-                  </div>
+                    required
+                  />
+                </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="age">Âge *</Label>
-                    <Input
-                      id="age"
-                      name="age"
-                      type="number"
-                      value={newPatient.age}
-                      onChange={handleInputChange}
+                  <Input
+                    id="age"
+                    name="age"
+                    type="number"
+                    value={newPatient.age}
+                    onChange={handleInputChange}
                       placeholder="Âge"
-                      required
-                    />
-                  </div>
+                    required
+                  />
+                </div>
                   <div>
                     <Label htmlFor="sexe">Sexe *</Label>
                     <Select value={newPatient.sexe} onValueChange={(value) => handleSelectChange('sexe', value)}>
@@ -972,7 +975,7 @@ const Patients: React.FC = () => {
                       </SelectContent>
                     </Select>
                     {/* Free text for préciser */}
-                    <Input
+                  <Input
                       className="mt-2"
                       placeholder="Préciser..."
                       value={newPatient.diagnostic.typeOperationPreciser}
@@ -983,11 +986,11 @@ const Patients: React.FC = () => {
                     <Label htmlFor="dateOperation">Date de l'opération</Label>
                     <Input
                       id="dateOperation"
-                      type="date"
+                    type="date"
                       value={newPatient.diagnostic.dateOperation}
                       onChange={(e) => handleNestedChange('diagnostic', 'dateOperation', e.target.value)}
-                    />
-                  </div>
+                  />
+                </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -995,14 +998,14 @@ const Patients: React.FC = () => {
                     <Select value={newPatient.diagnostic.laterality} onValueChange={value => handleNestedChange('diagnostic', 'laterality', value)}>
                       <SelectTrigger>
                         <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
+                    </SelectTrigger>
+                    <SelectContent>
                         <SelectItem value="Unilatéral">Unilatéral</SelectItem>
                         <SelectItem value="Bilatéral">Bilatéral</SelectItem>
                         <SelectItem value="Non spécifié">Non spécifié</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                    </SelectContent>
+                  </Select>
+                </div>
                   <div>
                     <Label>Reprise</Label>
                     <Select value={newPatient.diagnostic.reprise} onValueChange={value => handleNestedChange('diagnostic', 'reprise', value)}>
@@ -1020,12 +1023,12 @@ const Patients: React.FC = () => {
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <Label>Depuis (global)</Label>
-                    <Input
+                  <Input
                       placeholder="Depuis..."
                       value={newPatient.diagnostic.depuis}
                       onChange={e => handleNestedChange('diagnostic', 'depuis', e.target.value)}
-                    />
-                  </div>
+                  />
+                </div>
                 </div>
                 {/* Facteurs de risque */}
                 <div>
@@ -1043,7 +1046,7 @@ const Patients: React.FC = () => {
                       </div>
                       {newPatient.diagnostic.facteursRisque.hta && (
                         <div className="flex gap-2 mt-1">
-                          <Input
+                  <Input
                             placeholder="Depuis..."
                             value={newPatient.diagnostic.facteursRisque.htaDepuis}
                             onChange={e => handleDeepNestedChange('diagnostic', 'facteursRisque', 'htaDepuis', e.target.value)}
@@ -1052,8 +1055,8 @@ const Patients: React.FC = () => {
                             placeholder="Trt..."
                             value={newPatient.diagnostic.facteursRisque.htaTrt}
                             onChange={e => handleDeepNestedChange('diagnostic', 'facteursRisque', 'htaTrt', e.target.value)}
-                          />
-                        </div>
+                  />
+                </div>
                       )}
                     </div>
                     {/* Diabète */}
@@ -1068,7 +1071,7 @@ const Patients: React.FC = () => {
                       </div>
                       {newPatient.diagnostic.facteursRisque.diabete && (
                         <div className="flex gap-2 mt-1">
-                          <Input
+                  <Input
                             placeholder="Depuis..."
                             value={newPatient.diagnostic.facteursRisque.diabeteDepuis}
                             onChange={e => handleDeepNestedChange('diagnostic', 'facteursRisque', 'diabeteDepuis', e.target.value)}
@@ -1077,8 +1080,8 @@ const Patients: React.FC = () => {
                             placeholder="Trt..."
                             value={newPatient.diagnostic.facteursRisque.diabeteTrt}
                             onChange={e => handleDeepNestedChange('diagnostic', 'facteursRisque', 'diabeteTrt', e.target.value)}
-                          />
-                        </div>
+                  />
+                </div>
                       )}
                     </div>
                     {/* Tabac */}
@@ -1190,7 +1193,7 @@ const Patients: React.FC = () => {
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <Label htmlFor="antecedentsMedicaux">Antécédents médicaux</Label>
-                    <Textarea
+                  <Textarea
                       id="antecedentsMedicaux"
                       value={newPatient.antecedents.medicaux}
                       onChange={(e) => handleNestedChange('antecedents', 'medicaux', e.target.value)}
@@ -1205,7 +1208,7 @@ const Patients: React.FC = () => {
                           onCheckedChange={checked => handleDeepCheckboxChange('antecedents', 'medicauxDetails', 'angorEffort', checked as boolean)}
                         />
                         <Label htmlFor="angorEffort">Angor d'effort</Label>
-                      </div>
+                </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="sca"
@@ -1263,14 +1266,14 @@ const Patients: React.FC = () => {
                           </SelectContent>
                         </Select>
                         {newPatient.antecedents.chirurgicauxDetails.amputationAnterieure === 'Oui' && (
-                          <Input
+                  <Input
                             className="ml-2"
                             placeholder="Type..."
                             value={newPatient.antecedents.chirurgicauxDetails.amputationAnterieureType}
                             onChange={e => handleDeepNestedChange('antecedents', 'chirurgicauxDetails', 'amputationAnterieureType', e.target.value)}
                           />
-                        )}
-                      </div>
+                  )}
+                </div>
                       <div className="flex items-center space-x-2">
                         <Label>Amputation familiale</Label>
                         <Select value={newPatient.antecedents.chirurgicauxDetails.amputationFamiliale} onValueChange={value => handleDeepNestedChange('antecedents', 'chirurgicauxDetails', 'amputationFamiliale', value)}>
@@ -1436,83 +1439,79 @@ const Patients: React.FC = () => {
                 </div>
               </div>
 
-              {/* === ANESTHÉSIE === */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-primary border-b pb-2">Anesthésie</h3>
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="ag" 
-                      checked={newPatient.anesthesie.ag}
-                      onCheckedChange={(checked) => handleNestedChange('anesthesie', 'ag', checked as boolean)}
-                    />
-                    <Label htmlFor="ag">AG</Label>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium">ALR</Label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox 
-                          id="al" 
-                          checked={newPatient.anesthesie.alr.al}
-                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'al', checked as boolean)}
-                        />
-                        <Label htmlFor="al">A.L</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox 
-                          id="ra" 
-                          checked={newPatient.anesthesie.alr.ra}
-                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'ra', checked as boolean)}
-                        />
-                        <Label htmlFor="ra">R.A</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox 
-                          id="peridural" 
-                          checked={newPatient.anesthesie.alr.peridural}
-                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'peridural', checked as boolean)}
-                        />
-                        <Label htmlFor="peridural">Péridural</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox 
-                          id="perirachicombine" 
-                          checked={newPatient.anesthesie.alr.perirachicombine}
-                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'perirachicombine', checked as boolean)}
-                        />
-                        <Label htmlFor="perirachicombine">Périrachi-combiné</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox 
-                          id="blocPeripherique" 
-                          checked={newPatient.anesthesie.alr.blocPeripherique}
-                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'blocPeripherique', checked as boolean)}
-                        />
-                        <Label htmlFor="blocPeripherique">Bloc périphérique</Label>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="asa">Classification ASA</Label>
-                    <Select value={newPatient.anesthesie.asa} onValueChange={(value) => handleNestedChange('anesthesie', 'asa', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner une classification ASA" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ASA I">ASA I</SelectItem>
-                        <SelectItem value="ASA II">ASA II</SelectItem>
-                        <SelectItem value="ASA III">ASA III</SelectItem>
-                        <SelectItem value="ASA IV">ASA IV</SelectItem>
-                        <SelectItem value="ASA V">ASA V</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-
+             {/* === ANESTHÉSIE (sécurisé) === */}
+<div className="space-y-4">
+  <h3 className="text-lg font-semibold text-primary border-b pb-2">Anesthésie</h3>
+  <div className="grid grid-cols-1 gap-4">
+    <div className="flex items-center space-x-2">
+      <Checkbox 
+        id="edit-ag" 
+        checked={selectedPatient.anesthesie?.ag ?? false}
+        onCheckedChange={(checked) => setSelectedPatient({
+          ...selectedPatient,
+          anesthesie: {
+            ...selectedPatient.anesthesie,
+            ag: checked as boolean,
+            alr: {
+              al: selectedPatient.anesthesie?.alr?.al ?? false,
+              ra: selectedPatient.anesthesie?.alr?.ra ?? false,
+              peridural: selectedPatient.anesthesie?.alr?.peridural ?? false,
+              perirachicombine: selectedPatient.anesthesie?.alr?.perirachicombine ?? false,
+              blocPeripherique: selectedPatient.anesthesie?.alr?.blocPeripherique ?? false,
+            },
+            asa: selectedPatient.anesthesie?.asa ?? ''
+          }
+        })}
+      />
+      <Label htmlFor="edit-ag">AG</Label>
+    </div>
+    <div className="space-y-3">
+      <Label className="text-sm font-medium">ALR</Label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Répète pour chaque sous-champ ALR */}
+        <div className="flex items-center space-x-2">
+          <Checkbox 
+            id="edit-al" 
+            checked={selectedPatient.anesthesie?.alr?.al ?? false}
+            onCheckedChange={(checked) => setSelectedPatient({
+              ...selectedPatient,
+              anesthesie: {
+                ...selectedPatient.anesthesie,
+                alr: {
+                  ...selectedPatient.anesthesie?.alr,
+                  al: checked as boolean
+                }
+              }
+            })}
+          />
+          <Label htmlFor="edit-al">A.L</Label>
+        </div>
+        {/* ... Répète pour ra, peridural, perirachicombine, blocPeripherique ... */}
+      </div>
+    </div>
+    <div>
+      <Label htmlFor="edit-asa">Classification ASA</Label>
+      <Select value={selectedPatient.anesthesie?.asa ?? ''} onValueChange={(value) => setSelectedPatient({
+        ...selectedPatient,
+        anesthesie: {
+          ...selectedPatient.anesthesie,
+          asa: value
+        }
+      })}>
+        <SelectTrigger>
+          <SelectValue placeholder="Sélectionner une classification ASA" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ASA I">ASA I</SelectItem>
+          <SelectItem value="ASA II">ASA II</SelectItem>
+          <SelectItem value="ASA III">ASA III</SelectItem>
+          <SelectItem value="ASA IV">ASA IV</SelectItem>
+          <SelectItem value="ASA V">ASA V</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  </div>
+</div>
               {/* === NOTES ET ORDONNANCES === */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-primary border-b pb-2">Notes et Ordonnances</h3>
@@ -1537,7 +1536,7 @@ const Patients: React.FC = () => {
                     placeholder="Notes additionnelles..."
                     rows={3}
                   />
-                </div>
+              </div>
               </div>
 
               {/* === DOCUMENTS === */}
@@ -1657,9 +1656,9 @@ const Patients: React.FC = () => {
               <div className="flex justify-end gap-2 pt-4 border-t">
                 <Button type="button" variant="outline" onClick={() => setShowNewPatientModal(false)}>
                   Annuler
-                </Button>
+                      </Button>
                 <Button type="submit">Ajouter le Patient</Button>
-              </div>
+                    </div>
             </form>
           </DialogContent>
         </Dialog>
@@ -1676,7 +1675,7 @@ const Patients: React.FC = () => {
                   <h3 className="font-semibold">{selectedPatient.nom} {selectedPatient.prenom}</h3>
                   <p className="text-muted-foreground">{selectedPatient.age} ans • {selectedPatient.sexe}</p>
                 </div>
-                <div className="space-y-2">
+              <div className="space-y-2">
                   {selectedPatient.email && (
                     <div className="flex items-center gap-2">
                       <Mail size={16} className="text-muted-foreground" />
@@ -1716,9 +1715,9 @@ const Patients: React.FC = () => {
                       <ul className="text-sm text-muted-foreground space-y-1">
                         {selectedPatient.ordonnances.map((ordonnance, index) => (
                           <li key={index}>• {ordonnance}</li>
-                        ))}
-                      </ul>
-                    </div>
+                    ))}
+                  </ul>
+                </div>
                   )}
                 </div>
 
@@ -1735,7 +1734,7 @@ const Patients: React.FC = () => {
                         for (const file of Array.from(input.files)) {
                           formData.append('files', file);
                         }
-                        const res = await fetch(`/api/patients/${selectedPatient.id}/upload`, {
+                        const res = await fetch(`${API_URL}/patients/${selectedPatient.id}/upload`, {
                           method: 'POST',
                           body: formData
                         });
@@ -1797,36 +1796,36 @@ const Patients: React.FC = () => {
               <form onSubmit={handleEditSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <Label htmlFor="edit-nom">Nom</Label>
-                    <Input
-                      id="edit-nom"
+                  <Label htmlFor="edit-nom">Nom</Label>
+                  <Input
+                    id="edit-nom"
                       name="nom"
-                      value={selectedPatient.nom}
+                    value={selectedPatient.nom}
                       onChange={(e) => setSelectedPatient({...selectedPatient, nom: e.target.value})}
-                    />
-                  </div>
+                  />
+                </div>
                   <div>
-                    <Label htmlFor="edit-prenom">Prénom</Label>
-                    <Input
-                      id="edit-prenom"
+                  <Label htmlFor="edit-prenom">Prénom</Label>
+                  <Input
+                    id="edit-prenom"
                       name="prenom"
-                      value={selectedPatient.prenom}
+                    value={selectedPatient.prenom}
                       onChange={(e) => setSelectedPatient({...selectedPatient, prenom: e.target.value})}
-                    />
-                  </div>
+                  />
+                </div>
                 </div>
                 
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <Label htmlFor="edit-age">Âge</Label>
-                    <Input
-                      id="edit-age"
+                  <Label htmlFor="edit-age">Âge</Label>
+                  <Input
+                    id="edit-age"
                       name="age"
-                      type="number"
-                      value={selectedPatient.age}
+                    type="number"
+                    value={selectedPatient.age}
                       onChange={(e) => setSelectedPatient({...selectedPatient, age: parseInt(e.target.value)})}
-                    />
-                  </div>
+                  />
+                </div>
                   <div>
                     <Label htmlFor="edit-sexe">Sexe</Label>
                     <Select value={selectedPatient.sexe || 'Homme'} onValueChange={(value) => setSelectedPatient({...selectedPatient, sexe: value})}>
