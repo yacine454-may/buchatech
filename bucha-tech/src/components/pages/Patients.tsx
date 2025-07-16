@@ -1439,79 +1439,83 @@ const Patients: React.FC = () => {
                 </div>
               </div>
 
-             {/* === ANESTHÉSIE (sécurisé) === */}
-<div className="space-y-4">
-  <h3 className="text-lg font-semibold text-primary border-b pb-2">Anesthésie</h3>
-  <div className="grid grid-cols-1 gap-4">
-    <div className="flex items-center space-x-2">
-      <Checkbox 
-        id="edit-ag" 
-        checked={selectedPatient.anesthesie?.ag ?? false}
-        onCheckedChange={(checked) => setSelectedPatient({
-          ...selectedPatient,
-          anesthesie: {
-            ...selectedPatient.anesthesie,
-            ag: checked as boolean,
-            alr: {
-              al: selectedPatient.anesthesie?.alr?.al ?? false,
-              ra: selectedPatient.anesthesie?.alr?.ra ?? false,
-              peridural: selectedPatient.anesthesie?.alr?.peridural ?? false,
-              perirachicombine: selectedPatient.anesthesie?.alr?.perirachicombine ?? false,
-              blocPeripherique: selectedPatient.anesthesie?.alr?.blocPeripherique ?? false,
-            },
-            asa: selectedPatient.anesthesie?.asa ?? ''
-          }
-        })}
-      />
-      <Label htmlFor="edit-ag">AG</Label>
-    </div>
-    <div className="space-y-3">
-      <Label className="text-sm font-medium">ALR</Label>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* Répète pour chaque sous-champ ALR */}
-        <div className="flex items-center space-x-2">
-          <Checkbox 
-            id="edit-al" 
-            checked={selectedPatient.anesthesie?.alr?.al ?? false}
-            onCheckedChange={(checked) => setSelectedPatient({
-              ...selectedPatient,
-              anesthesie: {
-                ...selectedPatient.anesthesie,
-                alr: {
-                  ...selectedPatient.anesthesie?.alr,
-                  al: checked as boolean
-                }
-              }
-            })}
-          />
-          <Label htmlFor="edit-al">A.L</Label>
-        </div>
-        {/* ... Répète pour ra, peridural, perirachicombine, blocPeripherique ... */}
-      </div>
-    </div>
-    <div>
-      <Label htmlFor="edit-asa">Classification ASA</Label>
-      <Select value={selectedPatient.anesthesie?.asa ?? ''} onValueChange={(value) => setSelectedPatient({
-        ...selectedPatient,
-        anesthesie: {
-          ...selectedPatient.anesthesie,
-          asa: value
-        }
-      })}>
-        <SelectTrigger>
-          <SelectValue placeholder="Sélectionner une classification ASA" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ASA I">ASA I</SelectItem>
-          <SelectItem value="ASA II">ASA II</SelectItem>
-          <SelectItem value="ASA III">ASA III</SelectItem>
-          <SelectItem value="ASA IV">ASA IV</SelectItem>
-          <SelectItem value="ASA V">ASA V</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
-  </div>
-</div>
+              {/* === ANESTHÉSIE === */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-primary border-b pb-2">Anesthésie</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="ag" 
+                      checked={newPatient.anesthesie.ag}
+                      onCheckedChange={(checked) => handleNestedChange('anesthesie', 'ag', checked as boolean)}
+                    />
+                    <Label htmlFor="ag">AG</Label>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">ALR</Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id="al" 
+                          checked={newPatient.anesthesie.alr.al}
+                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'al', checked as boolean)}
+                        />
+                        <Label htmlFor="al">A.L</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id="ra" 
+                          checked={newPatient.anesthesie.alr.ra}
+                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'ra', checked as boolean)}
+                        />
+                        <Label htmlFor="ra">R.A</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id="peridural" 
+                          checked={newPatient.anesthesie.alr.peridural}
+                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'peridural', checked as boolean)}
+                        />
+                        <Label htmlFor="peridural">Péridural</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id="perirachicombine" 
+                          checked={newPatient.anesthesie.alr.perirachicombine}
+                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'perirachicombine', checked as boolean)}
+                        />
+                        <Label htmlFor="perirachicombine">Périrachi-combiné</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id="blocPeripherique" 
+                          checked={newPatient.anesthesie.alr.blocPeripherique}
+                          onCheckedChange={(checked) => handleDeepNestedChange('anesthesie', 'alr', 'blocPeripherique', checked as boolean)}
+                        />
+                        <Label htmlFor="blocPeripherique">Bloc périphérique</Label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="asa">Classification ASA</Label>
+                    <Select value={newPatient.anesthesie.asa} onValueChange={(value) => handleNestedChange('anesthesie', 'asa', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner une classification ASA" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ASA I">ASA I</SelectItem>
+                        <SelectItem value="ASA II">ASA II</SelectItem>
+                        <SelectItem value="ASA III">ASA III</SelectItem>
+                        <SelectItem value="ASA IV">ASA IV</SelectItem>
+                        <SelectItem value="ASA V">ASA V</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+
               {/* === NOTES ET ORDONNANCES === */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-primary border-b pb-2">Notes et Ordonnances</h3>
