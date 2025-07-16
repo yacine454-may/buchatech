@@ -369,6 +369,14 @@
   .sidebar-nav {
     padding-top: 3rem;
   }
+  .nav-item-text {
+    display: none !important;
+  }
+  .nav-item {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 @media (max-width: 600px) {
