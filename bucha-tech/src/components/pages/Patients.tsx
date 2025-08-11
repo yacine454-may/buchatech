@@ -163,6 +163,8 @@ const Patients: React.FC = () => {
   const { patients, addPatient, updatePatient, deletePatient, loading, error } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [showNewPatientModal, setShowNewPatientModal] = useState(false);
+  const [showConsultationModal, setShowConsultationModal] = useState(false);
+  const [showMultipleConsultationModal, setShowMultipleConsultationModal] = useState(false);
   const [newPatient, setNewPatient] = useState({
     nom: '',
     prenom: '',
@@ -286,6 +288,116 @@ const Patients: React.FC = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [consultationForm, setConsultationForm] = useState({
+    // Medical information fields (excluding personal info)
+    diabete: '',
+    notes: '',
+    ordonnance: '',
+    dateConsultation: '',
+    // État Civil Étendu
+    profession: '',
+    habitudesToxiques: {
+      tabac: false,
+      alcool: false,
+      autres: ''
+    },
+    origine: '',
+    // Diagnostic
+    diagnostic: {
+      typeOperation: 'Non spécifié',
+      typeOperationPreciser: '',
+      laterality: 'Non spécifié',
+      reprise: 'Non spécifié',
+      dateOperation: '',
+      facteursRisque: {
+        hta: false,
+        htaDepuis: '',
+        htaTrt: '',
+        diabete: false,
+        diabeteDepuis: '',
+        diabeteTrt: '',
+        dyslipidemie: false,
+        obesite: false,
+        tabac: false,
+        tabacDepuis: '',
+        tabacTrt: '',
+        cancer: false,
+        autres: '',
+        autresDepuis: ''
+      },
+      maladieCardiovasculaire: 'Aucune',
+      maladieCardiovasculaireFE: '',
+      maladieCardiovasculaireAutre: '',
+      depuis: ''
+    },
+    // Antécédents
+    antecedents: {
+      medicaux: '',
+      medicauxDetails: {
+        angorEffort: false,
+        sca: false,
+        idm: false,
+        aomi: false,
+        avc: false
+      },
+      chirurgicaux: '',
+      chirurgicauxDetails: {
+        amputationAnterieure: 'Non spécifié',
+        amputationAnterieureType: '',
+        amputationFamiliale: 'Non spécifié'
+      },
+      familiaux: {
+        hta: false,
+        dt2: false,
+        autres: ''
+      }
+    },
+    // Clinique
+    clinique: {
+      tensionArterielle: {
+        systolique: '',
+        diastolique: ''
+      },
+      frequenceCardiaque: '',
+      poids: '',
+      taille: '',
+      bmi: '',
+      examenNeurologique: {
+        effectue: false,
+        type: ''
+      }
+    },
+    // Consultation
+    consultation: {
+      dateAdmission: '',
+      transfert: false,
+      specialite: 'Médecine',
+      typeConsultation: 'Externe'
+    },
+    // Anesthésie
+    anesthesie: {
+      ag: false,
+      alr: {
+        al: false,
+        ra: false,
+        peridural: false,
+        perirachicombine: false,
+        blocPeripherique: false
+      },
+      asa: ''
+    },
+    documents: [] as File[],
+    evolution: {
+      cicatrisation: { delai: '', unite: 'jour' },
+      protheseDate: '',
+      crp: { initial: '', unMois: '', deuxMois: '' },
+      hemoglobineGlyquee: { avant: '', unMois: '', troisMois: '' },
+      troponine: { avantOperation: '', apresOperation: '' },
+      cycle: '',
+      autre: ''
+    },
+    statut: 'nouveau'
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -746,6 +858,17 @@ const Patients: React.FC = () => {
                     onClick={() => handleEdit(patient)}
                   >
                     <Edit size={14} />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedPatient(patient);
+                      setShowMultipleConsultationModal(true);
+                    }}
+                    className="bg-green-100 text-green-700 hover:bg-green-200"
+                  >
+                    <Plus size={14} />
                   </Button>
                   <Button
                     variant="destructive"
@@ -1824,112 +1947,128 @@ const Patients: React.FC = () => {
               </DialogDescription>
             </DialogHeader>
             {selectedPatient && (
-              <form onSubmit={handleEditSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
+              <form onSubmit={handleEditSubmit} className="space-y-6">
+                {/* === ÉTAT CIVIL DE BASE === */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-primary border-b pb-2">État Civil</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="edit-nom">Nom *</Label>
+                      <Input
+                        id="edit-nom"
+                        name="nom"
+                        value={selectedPatient.nom}
+                        onChange={(e) => setSelectedPatient({...selectedPatient, nom: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit-prenom">Prénom *</Label>
+                      <Input
+                        id="edit-prenom"
+                        name="prenom"
+                        value={selectedPatient.prenom}
+                        onChange={(e) => setSelectedPatient({...selectedPatient, prenom: e.target.value})}
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="edit-age">Âge *</Label>
+                      <Input
+                        id="edit-age"
+                        name="age"
+                        type="number"
+                        value={selectedPatient.age}
+                        onChange={(e) => setSelectedPatient({...selectedPatient, age: parseInt(e.target.value)})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit-sexe">Sexe *</Label>
+                      <Select value={selectedPatient.sexe || 'Homme'} onValueChange={(value) => setSelectedPatient({...selectedPatient, sexe: value})}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Homme">Homme</SelectItem>
+                          <SelectItem value="Femme">Femme</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="edit-email">Email</Label>
+                      <Input
+                        id="edit-email"
+                        name="email"
+                        type="email"
+                        value={selectedPatient.email || ''}
+                        onChange={(e) => setSelectedPatient({...selectedPatient, email: e.target.value})}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit-telephone">Téléphone</Label>
+                      <Input
+                        id="edit-telephone"
+                        name="telephone"
+                        value={selectedPatient.telephone || ''}
+                        onChange={(e) => setSelectedPatient({...selectedPatient, telephone: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
                   <div>
-                  <Label htmlFor="edit-nom">Nom</Label>
-                  <Input
-                    id="edit-nom"
-                      name="nom"
-                    value={selectedPatient.nom}
-                      onChange={(e) => setSelectedPatient({...selectedPatient, nom: e.target.value})}
-                  />
+                    <Label htmlFor="edit-adresse">Adresse</Label>
+                    <Input
+                      id="edit-adresse"
+                      name="adresse"
+                      value={selectedPatient.adresse || ''}
+                      onChange={(e) => setSelectedPatient({...selectedPatient, adresse: e.target.value})}
+                    />
+                  </div>
                 </div>
+
+                {/* === DIABÈTE === */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-primary border-b pb-2">Diabète</h3>
                   <div>
-                  <Label htmlFor="edit-prenom">Prénom</Label>
-                  <Input
-                    id="edit-prenom"
-                      name="prenom"
-                    value={selectedPatient.prenom}
-                      onChange={(e) => setSelectedPatient({...selectedPatient, prenom: e.target.value})}
-                  />
-                </div>
-                </div>
-                
-                <div className="grid grid-cols-1 gap-4">
-                  <div>
-                  <Label htmlFor="edit-age">Âge</Label>
-                  <Input
-                    id="edit-age"
-                      name="age"
-                    type="number"
-                    value={selectedPatient.age}
-                      onChange={(e) => setSelectedPatient({...selectedPatient, age: parseInt(e.target.value)})}
-                  />
-                </div>
-                  <div>
-                    <Label htmlFor="edit-sexe">Sexe</Label>
-                    <Select value={selectedPatient.sexe || 'Homme'} onValueChange={(value) => setSelectedPatient({...selectedPatient, sexe: value})}>
+                    <Label htmlFor="edit-diabete">Type de diabète</Label>
+                    <Select value={selectedPatient.diabete} onValueChange={(value) => setSelectedPatient({...selectedPatient, diabete: value})}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Homme">Homme</SelectItem>
-                        <SelectItem value="Femme">Femme</SelectItem>
+                        <SelectItem value="Type 1">Type 1</SelectItem>
+                        <SelectItem value="Type 2">Type 2</SelectItem>
+                        <SelectItem value="Gestationnel">Gestationnel</SelectItem>
+                        <SelectItem value="Autre">Autre</SelectItem>
+                        <SelectItem value="Non spécifié">Non spécifié</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="edit-diabete">Type de diabète</Label>
-                  <Select value={selectedPatient.diabete} onValueChange={(value) => setSelectedPatient({...selectedPatient, diabete: value})}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Type 1">Type 1</SelectItem>
-                      <SelectItem value="Type 2">Type 2</SelectItem>
-                      <SelectItem value="Gestationnel">Gestationnel</SelectItem>
-                      <SelectItem value="Autre">Autre</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4">
+                {/* === NOTES === */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-primary border-b pb-2">Notes</h3>
                   <div>
-                    <Label htmlFor="edit-email">Email</Label>
-                    <Input
-                      id="edit-email"
-                      name="email"
-                      type="email"
-                      value={selectedPatient.email || ''}
-                      onChange={(e) => setSelectedPatient({...selectedPatient, email: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="edit-telephone">Téléphone</Label>
-                    <Input
-                      id="edit-telephone"
-                      name="telephone"
-                      value={selectedPatient.telephone || ''}
-                      onChange={(e) => setSelectedPatient({...selectedPatient, telephone: e.target.value})}
+                    <Label htmlFor="edit-notes">Notes</Label>
+                    <Textarea
+                      id="edit-notes"
+                      name="notes"
+                      value={selectedPatient.notes || ''}
+                      onChange={(e) => setSelectedPatient({...selectedPatient, notes: e.target.value})}
+                      rows={3}
                     />
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="edit-adresse">Adresse</Label>
-                  <Input
-                    id="edit-adresse"
-                    name="adresse"
-                    value={selectedPatient.adresse || ''}
-                    onChange={(e) => setSelectedPatient({...selectedPatient, adresse: e.target.value})}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="edit-notes">Notes</Label>
-                  <Textarea
-                    id="edit-notes"
-                    name="notes"
-                    value={selectedPatient.notes || ''}
-                    onChange={(e) => setSelectedPatient({...selectedPatient, notes: e.target.value})}
-                    rows={3}
-                  />
-                </div>
-
-                <div className="flex justify-end gap-2">
+                <div className="flex justify-end gap-2 pt-4 border-t">
                   <Button type="button" variant="outline" onClick={() => setShowEditModal(false)}>
                     Annuler
                   </Button>
@@ -1937,6 +2076,255 @@ const Patients: React.FC = () => {
                 </div>
               </form>
             )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Modal de consultation multiple */}
+        <Dialog open={showMultipleConsultationModal} onOpenChange={setShowMultipleConsultationModal}>
+          <DialogContent className="sm:max-w-[98vw] md:max-w-[600px] max-h-[90vh] overflow-y-auto p-2 sm:p-4 md:p-6">
+            <DialogHeader>
+              <DialogTitle>Nouvelle Consultation - {selectedPatient?.nom} {selectedPatient?.prenom}</DialogTitle>
+              <DialogDescription>
+                Ajoutez une nouvelle consultation pour ce patient (informations personnelles conservées)
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                // Create a new consultation entry
+                const consultationData = {
+                  patientId: selectedPatient?.id,
+                  dateConsultation: consultationForm.dateConsultation,
+                  notes: consultationForm.notes,
+                  ordonnance: consultationForm.ordonnance,
+                  // Add other consultation fields as needed
+                  diagnostic: consultationForm.diagnostic,
+                  antecedents: consultationForm.antecedents,
+                  clinique: consultationForm.clinique,
+                  consultation: consultationForm.consultation,
+                  anesthesie: consultationForm.anesthesie,
+                  evolution: consultationForm.evolution,
+                  statut: consultationForm.statut
+                };
+                
+                // Here you would typically call an API to save the consultation
+                // For now, we'll just show a success message
+                setNotificationMessage("Consultation ajoutée avec succès");
+                setNotificationType("success");
+                setShowNotification(true);
+                setShowMultipleConsultationModal(false);
+                
+                // Reset the consultation form
+                setConsultationForm({
+                  diabete: '',
+                  notes: '',
+                  ordonnance: '',
+                  dateConsultation: '',
+                  profession: '',
+                  habitudesToxiques: { tabac: false, alcool: false, autres: '' },
+                  origine: '',
+                  diagnostic: {
+                    typeOperation: 'Non spécifié',
+                    typeOperationPreciser: '',
+                    laterality: 'Non spécifié',
+                    reprise: 'Non spécifié',
+                    dateOperation: '',
+                    facteursRisque: {
+                      hta: false, htaDepuis: '', htaTrt: '',
+                      diabete: false, diabeteDepuis: '', diabeteTrt: '',
+                      dyslipidemie: false, obesite: false,
+                      tabac: false, tabacDepuis: '', tabacTrt: '',
+                      cancer: false, autres: '', autresDepuis: ''
+                    },
+                    maladieCardiovasculaire: 'Aucune',
+                    maladieCardiovasculaireFE: '',
+                    maladieCardiovasculaireAutre: '',
+                    depuis: ''
+                  },
+                  antecedents: {
+                    medicaux: '',
+                    medicauxDetails: {
+                      angorEffort: false, sca: false, idm: false, aomi: false, avc: false
+                    },
+                    chirurgicaux: '',
+                    chirurgicauxDetails: {
+                      amputationAnterieure: 'Non spécifié',
+                      amputationAnterieureType: '',
+                      amputationFamiliale: 'Non spécifié'
+                    },
+                    familiaux: { hta: false, dt2: false, autres: '' }
+                  },
+                  clinique: {
+                    tensionArterielle: { systolique: '', diastolique: '' },
+                    frequenceCardiaque: '', poids: '', taille: '', bmi: '',
+                    examenNeurologique: { effectue: false, type: '' }
+                  },
+                  consultation: {
+                    dateAdmission: '', transfert: false,
+                    specialite: 'Médecine', typeConsultation: 'Externe'
+                  },
+                  anesthesie: {
+                    ag: false,
+                    alr: { al: false, ra: false, peridural: false, perirachicombine: false, blocPeripherique: false },
+                    asa: ''
+                  },
+                  documents: [],
+                  evolution: {
+                    cicatrisation: { delai: '', unite: 'jour' },
+                    protheseDate: '',
+                    crp: { initial: '', unMois: '', deuxMois: '' },
+                    hemoglobineGlyquee: { avant: '', unMois: '', troisMois: '' },
+                    troponine: { avantOperation: '', apresOperation: '' },
+                    cycle: '', autre: ''
+                  },
+                  statut: 'nouveau'
+                });
+              } catch (error) {
+                setNotificationMessage('Erreur lors de l\'ajout de la consultation');
+                setNotificationType('error');
+                setShowNotification(true);
+                console.error('Erreur ajout consultation:', error);
+              }
+            }} className="space-y-6">
+              {/* === DATE DE CONSULTATION === */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-primary border-b pb-2">Date de Consultation</h3>
+                <div>
+                  <Label htmlFor="consultation-dateConsultation">Date de la consultation *</Label>
+                  <Input
+                    id="consultation-dateConsultation"
+                    name="dateConsultation"
+                    type="date"
+                    value={consultationForm.dateConsultation}
+                    onChange={(e) => setConsultationForm(prev => ({ ...prev, dateConsultation: e.target.value }))}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* === DIABÈTE === */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-primary border-b pb-2">Diabète</h3>
+                <div>
+                  <Label htmlFor="consultation-diabete">Type de diabète</Label>
+                  <Select value={consultationForm.diabete} onValueChange={(value) => setConsultationForm(prev => ({ ...prev, diabete: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner le type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Type 1">Type 1</SelectItem>
+                      <SelectItem value="Type 2">Type 2</SelectItem>
+                      <SelectItem value="Gestationnel">Gestationnel</SelectItem>
+                      <SelectItem value="Autre">Autre</SelectItem>
+                      <SelectItem value="Non spécifié">Non spécifié</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* === DIAGNOSTIC === */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-primary border-b pb-2">Diagnostic</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="consultation-typeOperation">Type d'opération</Label>
+                    <Select value={consultationForm.diagnostic.typeOperation} onValueChange={(value) => setConsultationForm(prev => ({ ...prev, diagnostic: { ...prev.diagnostic, typeOperation: value } }))}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Chopart">Chopart</SelectItem>
+                        <SelectItem value="Lisfranc">Lisfranc</SelectItem>
+                        <SelectItem value="Trans tibial">Trans tibial</SelectItem>
+                        <SelectItem value="Trans fémoral">Trans fémoral</SelectItem>
+                        <SelectItem value="Désarticulation hanche">Désarticulation hanche</SelectItem>
+                        <SelectItem value="Désarticulation orteil">Désarticulation orteil</SelectItem>
+                        <SelectItem value="Autre">Autre</SelectItem>
+                        <SelectItem value="Non spécifié">Non spécifié</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      className="mt-2"
+                      placeholder="Préciser..."
+                      value={consultationForm.diagnostic.typeOperationPreciser}
+                      onChange={e => setConsultationForm(prev => ({ ...prev, diagnostic: { ...prev.diagnostic, typeOperationPreciser: e.target.value } }))}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="consultation-dateOperation">Date de l'opération</Label>
+                    <Input
+                      id="consultation-dateOperation"
+                      type="date"
+                      value={consultationForm.diagnostic.dateOperation}
+                      onChange={(e) => setConsultationForm(prev => ({ ...prev, diagnostic: { ...prev.diagnostic, dateOperation: e.target.value } }))}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* === CONSULTATION === */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-primary border-b pb-2">Consultation</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="consultation-dateAdmission">Date d'admission</Label>
+                    <Input
+                      id="consultation-dateAdmission"
+                      type="date"
+                      value={consultationForm.consultation.dateAdmission}
+                      onChange={(e) => setConsultationForm(prev => ({ ...prev, consultation: { ...prev.consultation, dateAdmission: e.target.value } }))}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="consultation-specialite">Spécialité en charge</Label>
+                    <Select value={consultationForm.consultation.specialite} onValueChange={(value) => setConsultationForm(prev => ({ ...prev, consultation: { ...prev.consultation, specialite: value } }))}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Médecine">Médecine</SelectItem>
+                        <SelectItem value="Chirurgie">Chirurgie</SelectItem>
+                        <SelectItem value="Cardiologie">Cardiologie</SelectItem>
+                        <SelectItem value="Endocrinologie">Endocrinologie</SelectItem>
+                        <SelectItem value="Autre">Autre</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+
+              {/* === NOTES ET ORDONNANCES === */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-primary border-b pb-2">Notes et Ordonnances</h3>
+                <div>
+                  <Label htmlFor="consultation-ordonnance">Ordonnance</Label>
+                  <Textarea
+                    id="consultation-ordonnance"
+                    value={consultationForm.ordonnance}
+                    onChange={(e) => setConsultationForm(prev => ({ ...prev, ordonnance: e.target.value }))}
+                    placeholder="Détails de l'ordonnance..."
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="consultation-notes">Notes</Label>
+                  <Textarea
+                    id="consultation-notes"
+                    value={consultationForm.notes}
+                    onChange={(e) => setConsultationForm(prev => ({ ...prev, notes: e.target.value }))}
+                    placeholder="Notes additionnelles..."
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4 border-t">
+                <Button type="button" variant="outline" onClick={() => setShowMultipleConsultationModal(false)}>
+                  Annuler
+                </Button>
+                <Button type="submit">Ajouter la Consultation</Button>
+              </div>
+            </form>
           </DialogContent>
         </Dialog>
 
