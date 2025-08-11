@@ -18,6 +18,127 @@ interface Patient {
   nomComplet?: string; // Virtual field from backend
   dateConsultation?: string;
   createdAt?: string; // Ajouté pour compatibilité avec le backend
+  
+  // État Civil Étendu
+  profession?: string;
+  habitudesToxiques?: {
+    tabac: boolean;
+    alcool: boolean;
+    autres?: string;
+  };
+  origine?: string;
+  
+  // Diagnostic
+  diagnostic?: {
+    typeOperation: string;
+    typeOperationPreciser?: string;
+    laterality?: string;
+    reprise?: string;
+    dateOperation?: string;
+    facteursRisque: {
+      hta: boolean;
+      htaDepuis?: string;
+      htaTrt?: string;
+      diabete: boolean;
+      diabeteDepuis?: string;
+      diabeteTrt?: string;
+      dyslipidemie: boolean;
+      obesite: boolean;
+      tabac: boolean;
+      tabacDepuis?: string;
+      tabacTrt?: string;
+      cancer: boolean;
+      autres?: string;
+      autresDepuis?: string;
+    };
+    maladieCardiovasculaire: string;
+    maladieCardiovasculaireFE?: string;
+    maladieCardiovasculaireAutre?: string;
+    depuis?: string;
+  };
+  
+  // Antécédents
+  antecedents?: {
+    medicaux?: string;
+    medicauxDetails?: {
+      angorEffort: boolean;
+      sca: boolean;
+      idm: boolean;
+      aomi: boolean;
+      avc: boolean;
+    };
+    chirurgicaux?: string;
+    chirurgicauxDetails?: {
+      amputationAnterieure: string;
+      amputationAnterieureType?: string;
+      amputationFamiliale: string;
+    };
+    familiaux: {
+      hta: boolean;
+      dt2: boolean;
+      autres?: string;
+    };
+  };
+  
+  // Clinique
+  clinique?: {
+    tensionArterielle?: {
+      systolique?: number;
+      diastolique?: number;
+    };
+    frequenceCardiaque?: number;
+    poids?: number;
+    taille?: number;
+    bmi?: number;
+    examenNeurologique: {
+      effectue: boolean;
+      type?: string;
+    };
+  };
+  
+  // Consultation
+  consultation?: {
+    dateAdmission?: string;
+    transfert: boolean;
+    specialite: string;
+    typeConsultation: string;
+  };
+  
+  // Anesthésie
+  anesthesie?: {
+    ag: boolean;
+    alr: {
+      al: boolean;
+      ra: boolean;
+      peridural: boolean;
+      perirachicombine: boolean;
+      blocPeripherique: boolean;
+    };
+    asa?: string;
+  };
+  
+  // Documents
+  documents?: Array<{
+    filename: string;
+    originalname: string;
+    mimetype: string;
+    size: number;
+    url: string;
+  }>;
+
+  // Évolution
+  evolution?: {
+    cicatrisation: { delai: string; unite: string };
+    protheseDate: string;
+    crp: { initial: string; unMois: string; deuxMois: string };
+    hemoglobineGlyquee: { avant: string; unMois: string; troisMois: string };
+    troponine: { avantOperation: string; apresOperation: string };
+    cycle: string;
+    autre: string;
+  };
+
+  // Statut
+  statut?: 'nouveau' | 'sous_trt' | 'apres_trt' | 'decede';
 }
 
 interface Medecin {

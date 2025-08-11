@@ -116,29 +116,29 @@ const Planning: React.FC = () => {
     try {
       // Ajouter le rendez-vous via le contexte
       await addRendezVous({
-        heure: newAppointment.heure,
-        patient: newAppointment.patient,
-        medecin: newAppointment.medecin,
+      heure: newAppointment.heure,
+      patient: newAppointment.patient,
+      medecin: newAppointment.medecin,
         type: newAppointment.type,
         date: newAppointment.date,
         notes: newAppointment.notes
-      });
+    });
 
-      toast({
-        title: "Rendez-vous créé",
-        description: "Le rendez-vous a été ajouté avec succès",
-        variant: "default"
-      });
+    toast({
+      title: "Rendez-vous créé",
+      description: "Le rendez-vous a été ajouté avec succès",
+      variant: "default"
+    });
 
-      setIsModalOpen(false);
-      setNewAppointment({
-        patient: '',
-        medecin: '',
-        type: '',
-        date: '',
-        heure: '',
-        notes: ''
-      });
+    setIsModalOpen(false);
+    setNewAppointment({
+      patient: '',
+      medecin: '',
+      type: '',
+      date: '',
+      heure: '',
+      notes: ''
+    });
     } catch (error) {
       toast({
         title: "Erreur",
@@ -294,8 +294,8 @@ const Planning: React.FC = () => {
               onChange={(e) => setSearchPatient(e.target.value)}
               className="pl-10"
             />
-          </div>
-        </div>
+                      </div>
+                    </div>
 
         {/* Vue du planning dynamique */}
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg border shadow-sm">
@@ -341,9 +341,9 @@ const Planning: React.FC = () => {
                           rdv.type === 'Urgence' ? 'bg-red-100 text-red-800' :
                           rdv.type === 'Consultation' ? 'bg-blue-100 text-blue-800' :
                           'bg-green-100 text-green-800'
-                        }`}>
-                          {rdv.type}
-                        </span>
+                      }`}>
+                        {rdv.type}
+                      </span>
                       </td>
                       <td className="px-4 py-3 text-sm">{rdv.statut || 'En attente'}</td>
                       <td className="px-4 py-3 text-sm text-gray-600">{rdv.notes || '-'}</td>
@@ -352,9 +352,9 @@ const Planning: React.FC = () => {
                 )}
               </tbody>
             </table>
-          </div>
-        </div>
-      </div>
+                    </div>
+                  </div>
+                </div>
 
       {/* Modal d'ajout de rendez-vous */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -368,90 +368,90 @@ const Planning: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="patient">Patient *</Label>
-              <Input
-                id="patient"
-                name="patient"
-                value={newAppointment.patient}
-                onChange={handleInputChange}
+                  <Input
+                    id="patient"
+                    name="patient"
+                    value={newAppointment.patient}
+                    onChange={handleInputChange}
                 placeholder="Nom du patient"
                 required
-              />
-            </div>
+                  />
+                </div>
             
             <div>
               <Label htmlFor="medecin">Médecin *</Label>
               <Select value={newAppointment.medecin} onValueChange={(value) => handleSelectChange('medecin', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner un médecin" />
-                </SelectTrigger>
-                <SelectContent>
-                  {medecins.map((medecin) => (
+                    </SelectTrigger>
+                    <SelectContent>
+                      {medecins.map((medecin) => (
                     <SelectItem key={medecin.id} value={`${medecin.nom} ${medecin.prenom}`}>
                       {medecin.nom} {medecin.prenom} - {medecin.specialite}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+              </div>
+
             <div>
               <Label htmlFor="type">Type de consultation *</Label>
               <Select value={newAppointment.type} onValueChange={(value) => handleSelectChange('type', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner le type" />
-                </SelectTrigger>
-                <SelectContent>
+                    </SelectTrigger>
+                    <SelectContent>
                   {typeConsultations.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="date">Date *</Label>
-                <Input
-                  id="date"
-                  name="date"
-                  type="date"
-                  value={newAppointment.date}
-                  onChange={handleInputChange}
+                  <Input
+                    id="date"
+                    name="date"
+                    type="date"
+                    value={newAppointment.date}
+                    onChange={handleInputChange}
                   required
-                />
+                  />
               </div>
               <div>
                 <Label htmlFor="heure">Heure *</Label>
-                <Input
-                  id="heure"
-                  name="heure"
-                  type="time"
-                  value={newAppointment.heure}
-                  onChange={handleInputChange}
+                  <Input
+                    id="heure"
+                    name="heure"
+                    type="time"
+                    value={newAppointment.heure}
+                    onChange={handleInputChange}
                   required
-                />
-              </div>
+                  />
+                </div>
             </div>
             
             <div>
               <Label htmlFor="notes">Notes</Label>
-              <Input
-                id="notes"
-                name="notes"
-                value={newAppointment.notes}
-                onChange={handleInputChange}
+                  <Input
+                    id="notes"
+                    name="notes"
+                    value={newAppointment.notes}
+                    onChange={handleInputChange}
                 placeholder="Notes additionnelles..."
-              />
-            </div>
-            
+                  />
+          </div>
+
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
-                Annuler
-              </Button>
+              Annuler
+            </Button>
               <Button type="submit">Créer le RDV</Button>
-            </div>
+          </div>
           </form>
         </DialogContent>
       </Dialog>

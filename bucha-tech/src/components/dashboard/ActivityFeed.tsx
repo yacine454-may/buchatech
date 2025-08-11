@@ -199,12 +199,12 @@ export const ActivityFeed = () => {
         </span>
       </div>
       
-      <motion.div
-        variants={listAnimation}
-        initial="hidden"
-        animate="show"
-        className="space-y-4"
-      >
+    <motion.div
+      variants={listAnimation}
+      initial="hidden"
+      animate="show"
+      className="space-y-4"
+    >
         {notifications.length === 0 ? (
           <motion.div
             variants={listItemAnimation}
@@ -228,7 +228,7 @@ export const ActivityFeed = () => {
                 <div className="activity-item-content">
                   <div className="activity-item-info">
                     <div className="activity-item-icon" style={{ background: `${color}15` }}>
-                      <Icon className="h-4 w-4" style={{ color }} />
+              <Icon className="h-4 w-4" style={{ color }} />
                     </div>
                     <div className="activity-item-details">
                       <div className="activity-item-patient">{notification.title}</div>
@@ -238,13 +238,13 @@ export const ActivityFeed = () => {
                   </div>
                   <div className="activity-item-time" style={{ background: color }}>
                     {notification.priority === 'high' ? '!' : '•'}
-                  </div>
-                </div>
-              </motion.div>
-            );
+              </div>
+            </div>
+          </motion.div>
+        );
           })
         )}
-      </motion.div>
+    </motion.div>
     </>
   );
 };

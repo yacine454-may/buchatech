@@ -388,8 +388,9 @@ const Patients: React.FC = () => {
         adresse: newPatient.adresse,
         notes: newPatient.notes,
         photoUrl: newPatient.photo,
-        ordonnance: newPatient.ordonnance,
+        ordonnances: newPatient.ordonnance ? [newPatient.ordonnance] : [],
         dateConsultation: newPatient.dateConsultation,
+        derniereVisite: new Date().toISOString(),
         // État Civil Étendu
         profession: newPatient.profession,
         habitudesToxiques: newPatient.habitudesToxiques,
@@ -424,7 +425,7 @@ const Patients: React.FC = () => {
           frequenceCardiaque: newPatient.clinique.frequenceCardiaque ? parseInt(newPatient.clinique.frequenceCardiaque) : undefined,
           poids: newPatient.clinique.poids ? parseFloat(newPatient.clinique.poids) : undefined,
           taille: newPatient.clinique.taille ? parseInt(newPatient.clinique.taille) : undefined,
-          bmi: newPatient.clinique.bmi,
+          bmi: newPatient.clinique.bmi ? parseFloat(newPatient.clinique.bmi) : undefined,
           examenNeurologique: newPatient.clinique.examenNeurologique
         },
         // Consultation
@@ -437,14 +438,29 @@ const Patients: React.FC = () => {
         // Anesthésie
         anesthesie: newPatient.anesthesie,
         evolution: {
-          cicatrisation: newPatient.evolution.cicatrisation,
-          protheseDate: newPatient.evolution.protheseDate,
-          crp: newPatient.evolution.crp,
-          hemoglobineGlyquee: newPatient.evolution.hemoglobineGlyquee,
-          troponine: newPatient.evolution.troponine,
+          cicatrisation: {
+            delai: newPatient.evolution.cicatrisation.delai ? newPatient.evolution.cicatrisation.delai : '',
+            unite: newPatient.evolution.cicatrisation.unite
+          },
+          protheseDate: newPatient.evolution.protheseDate || '',
+          crp: {
+            initial: newPatient.evolution.crp.initial ? newPatient.evolution.crp.initial : '',
+            unMois: newPatient.evolution.crp.unMois ? newPatient.evolution.crp.unMois : '',
+            deuxMois: newPatient.evolution.crp.deuxMois ? newPatient.evolution.crp.deuxMois : ''
+          },
+          hemoglobineGlyquee: {
+            avant: newPatient.evolution.hemoglobineGlyquee.avant ? newPatient.evolution.hemoglobineGlyquee.avant : '',
+            unMois: newPatient.evolution.hemoglobineGlyquee.unMois ? newPatient.evolution.hemoglobineGlyquee.unMois : '',
+            troisMois: newPatient.evolution.hemoglobineGlyquee.troisMois ? newPatient.evolution.hemoglobineGlyquee.troisMois : ''
+          },
+          troponine: {
+            avantOperation: newPatient.evolution.troponine.avantOperation ? newPatient.evolution.troponine.avantOperation : '',
+            apresOperation: newPatient.evolution.troponine.apresOperation ? newPatient.evolution.troponine.apresOperation : ''
+          },
           cycle: newPatient.evolution.cycle,
           autre: newPatient.evolution.autre
-        }
+        },
+        statut: newPatient.statut as 'nouveau' | 'sous_trt' | 'apres_trt' | 'decede'
       };
       
       await addPatient(patientData);
@@ -542,6 +558,17 @@ const Patients: React.FC = () => {
           transfert: false,
           specialite: 'Médecine',
           typeConsultation: 'Externe'
+        },
+        anesthesie: {
+          ag: false,
+          alr: {
+            al: false,
+            ra: false,
+            peridural: false,
+            perirachicombine: false,
+            blocPeripherique: false
+          },
+          asa: ''
         },
         documents: [],
         evolution: {

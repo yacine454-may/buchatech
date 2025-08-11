@@ -13,6 +13,7 @@ interface IMedecin {
   nom: string;
   prenom: string;
   specialite: string;
+  specialiteAutre?: string;
   telephone: string;
   email: string;
   status: 'En service' | 'En congé' | 'En formation';
@@ -30,6 +31,7 @@ const Medecins: React.FC = () => {
     nom: '',
     prenom: '',
     specialite: '',
+    specialiteAutre: '',
     email: '',
     telephone: '',
     status: 'En service'
@@ -93,29 +95,30 @@ const Medecins: React.FC = () => {
     try {
       // Ajouter le médecin via le contexte
       await addMedecin({
-        nom: 'Dr.',
-        prenom: newMedecin.nom.replace('Dr. ', ''),
-        specialite: newMedecin.specialite,
-        email: newMedecin.email,
-        telephone: newMedecin.telephone,
-        status: newMedecin.status
+      nom: 'Dr.',
+      prenom: newMedecin.nom.replace('Dr. ', ''),
+      specialite: newMedecin.specialite === 'Autres' ? newMedecin.specialiteAutre : newMedecin.specialite,
+      email: newMedecin.email,
+      telephone: newMedecin.telephone,
+      status: newMedecin.status
       });
 
-      toast({
-        title: "Succès",
-        description: "Le médecin a été ajouté avec succès",
-        variant: "default"
-      });
+    toast({
+      title: "Succès",
+      description: "Le médecin a été ajouté avec succès",
+      variant: "default"
+    });
 
-      setShowModal(false);
-      setNewMedecin({
-        nom: '',
+    setShowModal(false);
+    setNewMedecin({
+      nom: '',
         prenom: '',
-        specialite: '',
-        email: '',
-        telephone: '',
-        status: 'En service'
-      });
+      specialite: '',
+      specialiteAutre: '',
+      email: '',
+      telephone: '',
+      status: 'En service'
+    });
     } catch (error) {
       toast({
         title: "Erreur",
@@ -148,14 +151,14 @@ const Medecins: React.FC = () => {
         variant: "default"
       });
 
-      setShowEditModal(false);
+    setShowEditModal(false);
       setEditMedecin(null);
     } catch (error) {
-      toast({
+    toast({
         title: "Erreur",
         description: "Erreur lors de la mise à jour du médecin",
         variant: "destructive"
-      });
+    });
     }
   };
 
@@ -199,7 +202,7 @@ const Medecins: React.FC = () => {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <div>
+          <div>
           <h1 className="text-3xl font-bold tracking-tight">Gestion des Médecins</h1>
           <p className="text-muted-foreground">Gérez votre équipe médicale</p>
         </div>
@@ -213,7 +216,7 @@ const Medecins: React.FC = () => {
         {medecins.map((medecin) => (
           <div key={medecin.id} className="bg-card rounded-lg border p-6 hover:shadow-md transition-shadow">
             <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-full">
                   <UserCheck className="h-5 w-5 text-primary" />
                 </div>
@@ -244,14 +247,14 @@ const Medecins: React.FC = () => {
                 >
                   <X size={14} />
                 </Button>
-              </div>
             </div>
-            
+          </div>
+          
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm">
                 <Mail size={14} className="text-muted-foreground" />
                 <span>{medecin.email}</span>
-              </div>
+        </div>
               <div className="flex items-center gap-2 text-sm">
                 <Phone size={14} className="text-muted-foreground" />
                 <span>{medecin.telephone}</span>
@@ -282,63 +285,83 @@ const Medecins: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="nom">Nom</Label>
-              <Input
-                id="nom"
-                name="nom"
-                value={newMedecin.nom}
-                onChange={handleInputChange}
+                  <Input
+                    id="nom"
+                    name="nom"
+                    value={newMedecin.nom}
+                    onChange={handleInputChange}
                 placeholder="Nom du médecin"
-              />
-            </div>
+                  />
+                </div>
             <div>
               <Label htmlFor="specialite">Spécialité</Label>
               <Select value={newMedecin.specialite} onValueChange={(value) => handleSelectChange('specialite', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionner une spécialité" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Diabétologue">Diabétologue</SelectItem>
-                  <SelectItem value="Endocrinologue">Endocrinologue</SelectItem>
-                  <SelectItem value="Podologue">Podologue</SelectItem>
-                  <SelectItem value="Cardiologue">Cardiologue</SelectItem>
-                  <SelectItem value="Néphrologue">Néphrologue</SelectItem>
-                </SelectContent>
-              </Select>
+                    <SelectContent>
+                      <SelectItem value="Anesthésie Réanimation">Anesthésie Réanimation</SelectItem>
+                      <SelectItem value="Médecin Général">Médecin Général</SelectItem>
+                      <SelectItem value="Médecin Interne">Médecin Interne</SelectItem>
+                      <SelectItem value="Chirurgie Orthopédie">Chirurgie Orthopédie</SelectItem>
+                      <SelectItem value="Chirurgie Vasculaire">Chirurgie Vasculaire</SelectItem>
+                      <SelectItem value="Médecin Réducteur">Médecin Réducteur</SelectItem>
+                      <SelectItem value="Podologue">Podologue</SelectItem>
+                      <SelectItem value="Infectiologue">Infectiologue</SelectItem>
+                      <SelectItem value="Diabétologue">Diabétologue</SelectItem>
+                      <SelectItem value="Infirmiers">Infirmiers</SelectItem>
+                      <SelectItem value="Autres">Autres</SelectItem>
+                      <SelectItem value="Endocrinologue">Endocrinologue</SelectItem>
+                      <SelectItem value="Cardiologue">Cardiologue</SelectItem>
+                      <SelectItem value="Néphrologue">Néphrologue</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+            <div>
+              <Label htmlFor="specialiteAutre">Autre spécialité</Label>
+              <Input
+                id="specialiteAutre"
+                name="specialiteAutre"
+                value={newMedecin.specialiteAutre}
+                onChange={handleInputChange}
+                placeholder="Ex: Chirurgie Cardiaque"
+                disabled={newMedecin.specialite !== 'Autres'}
+              />
             </div>
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={newMedecin.email}
-                onChange={handleInputChange}
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={newMedecin.email}
+                    onChange={handleInputChange}
                 placeholder="email@example.com"
-              />
-            </div>
+                  />
+                </div>
             <div>
               <Label htmlFor="telephone">Téléphone</Label>
-              <Input
-                id="telephone"
-                name="telephone"
-                value={newMedecin.telephone}
-                onChange={handleInputChange}
+                  <Input
+                    id="telephone"
+                    name="telephone"
+                    value={newMedecin.telephone}
+                    onChange={handleInputChange}
                 placeholder="Numéro de téléphone"
-              />
-            </div>
+                  />
+                </div>
             <div>
               <Label htmlFor="status">Statut</Label>
               <Select value={newMedecin.status} onValueChange={(value) => handleSelectChange('status', value)}>
                 <SelectTrigger>
                   <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="En service">En service</SelectItem>
-                  <SelectItem value="En congé">En congé</SelectItem>
-                  <SelectItem value="En formation">En formation</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="En service">En service</SelectItem>
+                      <SelectItem value="En congé">En congé</SelectItem>
+                      <SelectItem value="En formation">En formation</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => setShowModal(false)}>
                 Annuler
@@ -357,10 +380,10 @@ const Medecins: React.FC = () => {
           </DialogHeader>
           {selectedMedecin && (
             <div className="space-y-4">
-              <div>
+                  <div>
                 <h3 className="font-semibold">{selectedMedecin.nom} {selectedMedecin.prenom}</h3>
                 <p className="text-muted-foreground">{selectedMedecin.specialite}</p>
-              </div>
+                  </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Mail size={16} className="text-muted-foreground" />
@@ -375,9 +398,9 @@ const Medecins: React.FC = () => {
                     selectedMedecin.status === 'En service' ? 'bg-green-100 text-green-800' :
                     selectedMedecin.status === 'En congé' ? 'bg-yellow-100 text-yellow-800' :
                     'bg-blue-100 text-blue-800'
-                  }`}>
-                    {selectedMedecin.status}
-                  </span>
+                }`}>
+                  {selectedMedecin.status}
+                </span>
                 </div>
               </div>
             </div>
@@ -392,27 +415,27 @@ const Medecins: React.FC = () => {
             <DialogTitle>Modifier le médecin</DialogTitle>
             <DialogDescription>
               Modifiez les informations du médecin
-            </DialogDescription>
+                </DialogDescription>
           </DialogHeader>
           {editMedecin && (
             <form onSubmit={handleEditSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="edit-nom">Nom</Label>
-                <Input
-                  id="edit-nom"
-                  name="nom"
-                  value={editMedecin.nom}
-                  onChange={handleEditInputChange}
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-prenom">Prénom</Label>
-                <Input
-                  id="edit-prenom"
-                  name="prenom"
-                  value={editMedecin.prenom}
-                  onChange={handleEditInputChange}
-                />
+                <div>
+                  <Label htmlFor="edit-nom">Nom</Label>
+                  <Input
+                    id="edit-nom"
+                    name="nom"
+                    value={editMedecin.nom}
+                    onChange={handleEditInputChange}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-prenom">Prénom</Label>
+                  <Input
+                    id="edit-prenom"
+                    name="prenom"
+                    value={editMedecin.prenom}
+                    onChange={handleEditInputChange}
+                  />
               </div>
               <div>
                 <Label htmlFor="edit-specialite">Spécialité</Label>
@@ -421,13 +444,33 @@ const Medecins: React.FC = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Diabétologue">Diabétologue</SelectItem>
-                    <SelectItem value="Endocrinologue">Endocrinologue</SelectItem>
+                    <SelectItem value="Anesthésie Réanimation">Anesthésie Réanimation</SelectItem>
+                    <SelectItem value="Médecin Général">Médecin Général</SelectItem>
+                    <SelectItem value="Médecin Interne">Médecin Interne</SelectItem>
+                    <SelectItem value="Chirurgie Orthopédie">Chirurgie Orthopédie</SelectItem>
+                    <SelectItem value="Chirurgie Vasculaire">Chirurgie Vasculaire</SelectItem>
+                    <SelectItem value="Médecin Réducteur">Médecin Réducteur</SelectItem>
                     <SelectItem value="Podologue">Podologue</SelectItem>
+                    <SelectItem value="Infectiologue">Infectiologue</SelectItem>
+                    <SelectItem value="Diabétologue">Diabétologue</SelectItem>
+                    <SelectItem value="Infirmiers">Infirmiers</SelectItem>
+                    <SelectItem value="Autres">Autres</SelectItem>
+                    <SelectItem value="Endocrinologue">Endocrinologue</SelectItem>
                     <SelectItem value="Cardiologue">Cardiologue</SelectItem>
                     <SelectItem value="Néphrologue">Néphrologue</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-specialiteAutre">Autre spécialité</Label>
+                <Input
+                  id="edit-specialiteAutre"
+                  name="specialiteAutre"
+                  value={editMedecin.specialiteAutre}
+                  onChange={handleEditInputChange}
+                  placeholder="Ex: Chirurgie Cardiaque"
+                  disabled={editMedecin.specialite !== 'Autres'}
+                />
               </div>
               <div>
                 <Label htmlFor="edit-email">Email</Label>
@@ -439,13 +482,13 @@ const Medecins: React.FC = () => {
                   onChange={handleEditInputChange}
                 />
               </div>
-              <div>
-                <Label htmlFor="edit-telephone">Téléphone</Label>
-                <Input
-                  id="edit-telephone"
-                  name="telephone"
-                  value={editMedecin.telephone}
-                  onChange={handleEditInputChange}
+                <div>
+                  <Label htmlFor="edit-telephone">Téléphone</Label>
+                  <Input
+                    id="edit-telephone"
+                    name="telephone"
+                    value={editMedecin.telephone}
+                    onChange={handleEditInputChange}
                 />
               </div>
               <div>
